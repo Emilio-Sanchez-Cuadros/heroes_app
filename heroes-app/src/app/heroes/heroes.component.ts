@@ -10,13 +10,13 @@ import { Subject } from 'rxjs';
 // import { UserService } from '../services/user.service';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  selector: 'app-heroes',
+  templateUrl: './heroes.component.html',
+  styleUrls: ['./heroes.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class HeroesComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'email'];
+  displayedColumns: string[] = ['id', 'name'];
   dataSource: any;
   toasterMessage: string = '';
   token: any = undefined;
@@ -33,7 +33,11 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     // lastValueFrom(this._usersService.getUsers()).then(users => {
-    //   this.dataSource = users;
+      this.dataSource = [
+        { id: 1,
+          name: 'Spiderman'
+        }
+      ];
     // });
 
     // this._usersService.getUsers().subscribe(users => {
@@ -56,7 +60,7 @@ export class UsersComponent implements OnInit {
 
 
   viewUser(hero: Hero | null, action: string) {
-    console.log('viewUser()', hero);
+    console.log('viewHero()', hero);
     // const dialogRef = this.matDialog.open(DialogComponent, {
     //   data: {
     //     user,

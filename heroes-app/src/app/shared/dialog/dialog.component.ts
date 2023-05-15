@@ -1,9 +1,9 @@
 import {Component, Inject, Output, EventEmitter} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { UsersService } from '../../services/users.service';
+// import { UsersService } from '../../services/users.service';
 import { lastValueFrom } from 'rxjs';
-import { User } from 'src/app/models/models';
+import { Hero } from 'src/app/models/models';
 
 /**
  * @title Dialog Overview
@@ -33,7 +33,7 @@ export class DialogComponent {
   // });
 
   @Output()
-  userValues = new EventEmitter<User>();
+  userValues = new EventEmitter<Hero>();
 
   
   constructor(

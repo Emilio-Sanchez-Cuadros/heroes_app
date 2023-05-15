@@ -13,9 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule} from '@angular/material/menu';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-// import { UsersComponent } from './heroes/heroes.component';
+import { HeroesComponent } from './heroes/heroes.component';
 import { MatTableModule } from '@angular/material/table';
-// import { DialogComponent } from './shared/dialog/dialog.component'  
+import { DialogComponent } from './shared/dialog/dialog.component'  
 import { MatDialogModule } from '@angular/material/dialog';
 // import { UsersService } from './services/users.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,14 +23,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrModule } from 'ngx-toastr';
+import { HeroDetailsComponent } from './hero-details/hero-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
     LandingPageComponent,
-    // UsersComponent,
-    // DialogComponent
+    HeroesComponent,
+    DialogComponent,
+    HeroDetailsComponent
   ],
   imports: [
     BrowserModule,
