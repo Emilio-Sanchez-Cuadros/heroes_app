@@ -1,0 +1,19 @@
+.image-container {
+    height: 50%;
+    width: 100%;
+}
+
+.landing-image {
+    width: 100%;
+    height: 100%;  
+    content: url(../../assets/images/heroes.jpeg);
+    object-fit: cover;
+}
+
+.custom-height {
+    height: 60%;
+}
+
+.lower-container {
+    height: 50%;
+}
