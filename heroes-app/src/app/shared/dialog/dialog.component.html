@@ -1,6 +1,6 @@
 <h2 *ngIf="data.action === 'add'">Create hero</h2>
 <h2 *ngIf="data.action === 'edit'">Edit hero</h2>
-<h3 *ngIf="data.action === 'delete'">Are you sure you want to delete this hero?</h3>
+<h3 *ngIf="data.action === 'delete'">Are you sure you want to delete this hero: {{data.heroName}}?</h3>
 <section *ngIf="!['delete'].includes(data.action)" class="text-center sample-app-content">  
     <img *ngIf="data.hero?.picture" height="100" width="100" [src]="data.hero?.picture" alt="">
     <h3 *ngIf="!data.hero?.picture">No picture available</h3>

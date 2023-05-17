@@ -34,7 +34,8 @@ export class HeroesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    lastValueFrom(this._heroesService.getHeroes()).then(heroes => {
+    lastValueFrom(this._heroesService.getHeroes())
+      .then(heroes => {
         this.dataSource = this.getHeroesList(heroes);
         this.dataSource.paginator = this.paginator;   
     });
@@ -45,9 +46,10 @@ export class HeroesComponent implements OnInit {
     )
     .subscribe(searchText => {
       console.log('searchInput.subscribe() searchText:', searchText);
-      this._heroesService.getHeroByName(searchText).subscribe(searchList => {
-        this.dataSource = this.getHeroesList(searchList);
-        this.dataSource.paginator = this.paginator;
+      this._heroesService.getHeroByName(searchText)
+        .subscribe(searchList => {
+          this.dataSource = this.getHeroesList(searchList);
+          this.dataSource.paginator = this.paginator;
       })
     });
 
@@ -73,7 +75,6 @@ export class HeroesComponent implements OnInit {
           console.log('The dialog was closed: ', result);
           let updatedList;
           if (result.action === 'add') {
-            // this.dataSource.push(result.hero);
             updatedList = await lastValueFrom(this._heroesService.createHero(result.hero));
             this.dataSource = updatedList;
             this.toasterMessage = 'Hero created successfully';
@@ -124,7 +125,8 @@ export class HeroesComponent implements OnInit {
     console.log('deleteHero()', hero);
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
-        action
+        action,
+        heroName: hero.name
       },
     });
     dialogRef.afterClosed().subscribe(async result => {
@@ -133,7 +135,7 @@ export class HeroesComponent implements OnInit {
         return;
       }
       try {
-        const indexOfHero = this.dataSource.data.indexOf(hero)
+        const indexOfHero = this.dataSource.data.indexOf(hero);
         const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
         this.dataSource = this.getHeroesList(updatedList);
         this.dataSource.paginator = this.paginator;
