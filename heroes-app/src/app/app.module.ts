@@ -17,13 +17,15 @@ import { HeroesComponent } from './heroes/heroes.component';
 import { MatTableModule } from '@angular/material/table';
 import { DialogComponent } from './shared/dialog/dialog.component'  
 import { MatDialogModule } from '@angular/material/dialog';
-// import { UsersService } from './services/users.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrModule } from 'ngx-toastr';
 import { HeroDetailsComponent } from './hero-details/hero-details.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {  } from '@angular/material/';
+import { UppercaseDirective } from './directives/uppercase.directive'
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { HeroDetailsComponent } from './hero-details/hero-details.component';
     LandingPageComponent,
     HeroesComponent,
     DialogComponent,
-    HeroDetailsComponent
+    HeroDetailsComponent,
+    UppercaseDirective
   ],
   imports: [
     BrowserModule,
@@ -52,11 +55,13 @@ import { HeroDetailsComponent } from './hero-details/hero-details.component';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    }),
+    MatPaginatorModule
 ],
   providers: [
-    HttpClientModule,
-    // UsersService
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })

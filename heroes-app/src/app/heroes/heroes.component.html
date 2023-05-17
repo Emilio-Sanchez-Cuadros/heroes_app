@@ -1,44 +1,77 @@
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="text-center mt-5">
-            <!-- <h2 *ngIf="!token">Please log in to be able to manage users</h2> -->
-            <h2>Welcome!</h2>    
-        </div>    
-        <div>
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
+<div class="p-5 text-center">
 
-                <!--- Note that these columns can be defined in any order.
-                      The actual rendered columns are set as a property on the row definition" -->
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef> Id </th>
-                    <td mat-cell *matCellDef="let hero"> {{hero?.id}} </td>
-                </ng-container>
-
-                <!-- Name Column -->
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Name </th>
-                    <td mat-cell *matCellDef="let hero"> {{hero?.name}} </td>
-                </ng-container>
-
-                <!-- Edit Button Column -->
-                <ng-container matColumnDef="edit-button">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let hero">
-                        <button mat-raised-button class="button" color="primary" (click)="viewUser(hero, 'edit')">Edit</button>
-                    </td>
-                </ng-container>
-
-                <!-- Delete Button Column -->
-                <ng-container matColumnDef="delete-button">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let hero">
-                        <button mat-raised-button class="button" color="warn" (click)="deleteUser(hero.id, 'delete')">Delete</button>
-                    </td>
-                    </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row [routerLink]="['/heroes/hero.id']" routerLinkActive="router-link-active" *matRowDef="let hero; columns: displayedColumns;"></tr>
-            </table>
-            <button mat-raised-button color="primary" class="action-button mt-5" (click)="viewUser(null, 'add')">Add user</button>
+    <h2>Welcome!</h2>
+    <div class="d-flex justify-content-center align-items-center">
+        <h3 style="margin-top: 15px !important;">Search for a hero</h3>
+        <div class="search-wrapper">
+            <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <input class="fontFamily" [formControl]="searchInput">
+            </div>
         </div>
+    </div>
+    <div class="button-container">
+        <button color="primary" mat-fab id="add-item-button" (click)="newHero('add')" aria-label="add hero">
+            <mat-icon>person_add</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="!loaded">
+        <div>
+            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
+        </div>
+
+    </div>
+    <div *ngIf="loaded">
+        <table mat-table matSort #table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> Id </th>
+                <td mat-cell *matCellDef="let hero"> {{hero?.id}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let hero"> {{hero?.name}} </td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td style="padding: 5px 0 5px 0;" mat-cell *matCellDef="let hero"> {{hero?.description}} </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td *matCellDef="let hero">
+                    <div>
+                        <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                            (click)="$event.stopPropagation();">
+                            <mat-icon style="color: white">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #moreMenu="matMenu">
+                            <button mat-menu-item aria-label="status" (click)="viewHero(hero, 'edit')">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item aria-label="status" (click)="viewHero(hero, 'view')">
+                                <mat-icon>visibility</mat-icon>
+                                <span>View</span>
+                            </button>
+                            <button mat-menu-item aria-label="status" (click)="deleteHero(hero, 'delete')">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row routerLinkActive="router-link-active" *matRowDef="let hero; columns: displayedColumns;">
+            </tr>
+        </table>
+        <mat-paginator [showFirstLastButtons]="true" [length]="20" [pageSize]="10" [pageSizeOptions]="[5, 10, 30, 50]"
+            [pageIndex]="0"></mat-paginator>
     </div>
 </div>

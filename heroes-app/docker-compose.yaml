@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: heroes-app
+    restart: always
+    ports:
+      - 4200:80
+    volumes:
+      - ./heroes-app:/usr/share/nginx/html/heroes-app
+      - /usr/src/app/app-ui/node_modules

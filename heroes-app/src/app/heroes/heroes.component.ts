@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
 import { Hero } from '../models/models'
 import { DialogComponent } from '../shared/dialog/dialog.component';
-// import { UsersService } from '../services/users.service';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
-// import { UserService } from '../services/user.service';
+import { debounceTime } from 'rxjs';
+import { HeroesService } from '../services/heroes.service';
+import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-heroes',
@@ -16,109 +18,136 @@ import { Subject } from 'rxjs';
 })
 export class HeroesComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name'];
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;    
+
+  displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   dataSource: any;
   toasterMessage: string = '';
-  token: any = undefined;
-
-  private token$ = new Subject<String>();
-  // tokenObservable$: Observable<String>();
+  searchInput = new FormControl('');
+  loaded: boolean = true;
 
   constructor(
     public matDialog: MatDialog,
-    // private _usersService: UsersService,
-    // private _userService: UserService,
-    private toaster: ToastrService
+    private _heroesService: HeroesService,
+    private toaster: ToastrService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    // lastValueFrom(this._usersService.getUsers()).then(users => {
-      this.dataSource = [
-        { id: 1,
-          name: 'Spiderman'
-        }
-      ];
-    // });
+    lastValueFrom(this._heroesService.getHeroes()).then(heroes => {
+        this.dataSource = this.getHeroesList(heroes);
+        this.dataSource.paginator = this.paginator;   
+    });
 
-    // this._usersService.getUsers().subscribe(users => {
-    //   console.log('The usersService observable', users);
-    //   this.dataSource = users;
-    // });
-    
-    // this._userService.getToken().subscribe(token => {
-    //   console.log('users.component this._userService', token);
-    //   this.token = token;
-    //   if (token) {
-    //     this.displayedColumns.push('edit-button', 'delete-button');
-    //   }
+    this.searchInput.valueChanges
+    .pipe(
+      debounceTime(300),
+    )
+    .subscribe(searchText => {
+      console.log('searchInput.subscribe() searchText:', searchText);
+      this._heroesService.getHeroByName(searchText).subscribe(searchList => {
+        this.dataSource = this.getHeroesList(searchList);
+        this.dataSource.paginator = this.paginator;
+      })
+    });
 
-    //   if (!token && this.displayedColumns.includes('edit-button')) {
-    //     this.displayedColumns.filter(column => column !== 'edit-button' && column !== 'delete-button');
-    //   } 
-    // });
   }
 
-
-  viewUser(hero: Hero | null, action: string) {
+  viewHero(hero: Hero, action: string) {
+    if (action === 'view') {
+      const indexOfHero = this.dataSource.data.indexOf(hero)
+      this.router.navigate(['/heroes/', indexOfHero]);
+      return;
+    }
     console.log('viewHero()', hero);
-    // const dialogRef = this.matDialog.open(DialogComponent, {
-    //   data: {
-    //     user,
-    //     action
-    //   },
-    // });
+    const dialogRef = this.matDialog.open(DialogComponent, {
+      data: {
+        hero,
+        action
+      },
+    });
 
-    // dialogRef.afterClosed().subscribe(async result => {
-    //   if (result?.user) {
-    //     try {
-    //       console.log('The dialog was closed: ', result.user);
-    //       this.dataSource.push(result.user);
-    //       if (result.action === 'add') {
-    //         await lastValueFrom(this._usersService.createUser(result.user));
-    //         this.toasterMessage = 'User created succesfully';
-    //       } else if (result.action === 'edit') {
-    //         await lastValueFrom(this._usersService.updateUser(result.user, result.user.id));
-    //         this.toasterMessage = 'User updated succesfully';
-    //       } 
-    //       this.toaster.success(this.toasterMessage);
-    //       lastValueFrom(this._usersService.getUsers()).then(users => {
-    //         this.dataSource = users;
-    //       });
-    //     } catch (error: any) {
-    //       console.log(error);
-    //       switch (error.error.code) {
-    //         case 'P2002':
-    //           this.toaster.error('email already exists');
-    //           break;
-    //         default:
-    //           this.toaster.error('Something went wrong, please review the data and try again');
-    //           break;
-    //       }
-    //     }
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result?.hero) {
+        try {
+          console.log('The dialog was closed: ', result);
+          let updatedList;
+          if (result.action === 'add') {
+            // this.dataSource.push(result.hero);
+            updatedList = await lastValueFrom(this._heroesService.createHero(result.hero));
+            this.dataSource = updatedList;
+            this.toasterMessage = 'Hero created successfully';
+          } else if (result.action === 'edit') {
+            const indexOfHero = this.dataSource.data.indexOf(hero);
+            const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, indexOfHero));
+            this.dataSource.data[indexOfHero] = updatedHero;
+            this.toasterMessage = 'Hero updated successfully';
+          }
+          this.dataSource.paginator = this.paginator;
+          this.toaster.success(this.toasterMessage);
+        } catch (error: any) {
+          console.log(error);
+          this.toaster.error('Something went wrong, please review the data and try again');
+        }
+      }
+    });
   }
 
-  async deleteUser(heroId: number, action: string) {
-    console.log('deleteHero()', heroId);
+  async newHero(action: string) {
+    console.log('newHero this.dataSource', this.dataSource);
+    const dialogRef = this.matDialog.open(DialogComponent, {
+      data: {
+        action,
+        idToNewUser: Date.now()
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result === 'Cancel') {
+        return;
+      }
+      try {
+        const updatedList = await lastValueFrom(this._heroesService.createHero(result.hero));
+        this.dataSource = this.getHeroesList(updatedList);
+        this.dataSource.paginator = this.paginator;
+        this.toasterMessage = 'Hero created successfully';
+        this.toaster.success(this.toasterMessage);
+      } catch (error) {
+        console.log(error);
+        this.toaster.error('Something went wrong, please try again');
+      }
+    });
+
+  }
+
+  async deleteHero(hero: Hero, action: string) {
+    console.log('deleteHero()', hero);
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
         action
       },
     });
-    // dialogRef.afterClosed().subscribe(async result => {
-    //   try {
-    //     await lastValueFrom(this._usersService.deleteUser(userId));
-    //     this.toasterMessage = 'User deleted succesfully';
-    //     this.toaster.success(this.toasterMessage);
-    //     lastValueFrom(this._usersService.getUsers()).then(users => {
-    //       this.dataSource = users;
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
-    //     this.toaster.error('Something went wrong, please try again');
-    //   }
-    // })
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log('deleteHero result: ', result);
+      if (result === 'Cancel') {
+        return;
+      }
+      try {
+        const indexOfHero = this.dataSource.data.indexOf(hero)
+        const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
+        this.dataSource = this.getHeroesList(updatedList);
+        this.dataSource.paginator = this.paginator;
+        this.toasterMessage = 'Hero deleted successfully';
+        this.toaster.success(this.toasterMessage);
+      } catch (error) {
+        console.log(error);
+        this.toaster.error('Something went wrong, please try again');
+      }
+    });
+  }
+
+  getHeroesList(heroes: Hero[]) {
+    return new MatTableDataSource(heroes);
   }
 
 }

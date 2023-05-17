@@ -1,54 +1,68 @@
-table {
-    width: 100%;
+mat-table, 
+mat-paginator {
+    width: auto;
+    margin: auto;
 }
 
-button {
-    width: 100px;
+.search-wrapper {
+    width: 100%;
+    max-width: 200px;
+    overflow: hidden;
+    .search {
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        padding: 0px 0px 0px 18px;
+        input {
+            width: 100%;
+            height: 48px;
+            min-height: 48px;
+            max-height: 48px;
+            border-radius: 15px;
+            padding: 0 16px;
+            // outline: none;
+        }
+    }
+}
+
+.button-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%; 
+    text-align: end;
+}
+
+.mat-header-cell {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .mat-column-id {
-    word-wrap: break-word !important;
-    white-space: unset !important;
     flex: 0 0 5% !important;
     width: 5% !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;  
 }
 
 .mat-column-name {
-    word-wrap: break-word !important;
-    white-space: unset !important;
     flex: 0 0 10% !important;
     width: 10% !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;  
 }
 
-.mat-column-email {
-    word-wrap: break-word !important;
-    white-space: unset !important;
-    flex: 0 0 20% !important;
-    width: 20% !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;  
+.mat-column-description {
+    flex: 0 0 15% !important;
+    width: 15% !important;
 }
 
-.mat-column-edit-button {
-    word-wrap: break-word !important;
-    white-space: unset !important;
+.mat-column-actions {
     flex: 0 0 10% !important;
-    width: 10% !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;  
+    width: 2% !important;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
-.mat-column-delete-button {
-    word-wrap: break-word !important;
-    white-space: unset !important;
-    flex: 0 0 10% !important;
-    width: 10% !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;  
+td {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(255,255,255,.12);
 }
 
 .link {

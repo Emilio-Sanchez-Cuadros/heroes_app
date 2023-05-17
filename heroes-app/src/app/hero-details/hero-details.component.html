@@ -1,1 +1,17 @@
-<p>hero-details works!</p>
+<div class="d-flex flex-column">
+    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+        <div class="card p-4">
+            <div class=" image d-flex flex-column justify-content-center align-items-center"> <button
+                    class="btn btn-secondary"> <img [src]="hero.picture" height="100" width="100" /></button> <span
+                    class="name mt-3">{{hero.name}}</span> <span class="idd">{{hero.name}}</span>
+                <div class="text mt-3"> <span>{{hero.description}}</span>
+                    <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> <span><i
+                                class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> <span><i
+                                class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span> </div>
+                    <div class=" px-2 rounded mt-4 date "> <span class="join">Joined May,2023</span> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button mat-raised-button color="primary" class="details-button" routerLink="/heroes">Go back heroes list</button>
+</div>

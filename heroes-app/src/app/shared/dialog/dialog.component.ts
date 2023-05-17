@@ -1,7 +1,6 @@
 import {Component, Inject, Output, EventEmitter} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-// import { UsersService } from '../../services/users.service';
 import { lastValueFrom } from 'rxjs';
 import { Hero } from 'src/app/models/models';
 
@@ -15,25 +14,13 @@ import { Hero } from 'src/app/models/models';
 })
 export class DialogComponent {
 
-  firstName: string = this.data?.user?.name?.split(' ').slice(0, -1).join(' ');
-  lastName: string = this.data?.user?.name?.split(' ').slice(-1).join(' ');
   submitText: string = '';
   userForm: any;
 
-  // userForm = new FormGroup({
-  //   firstName: new FormControl(this.firstName || '', Validators.required),
-  //   lastName: new FormControl(this.lastName || '', Validators.required),
-  //   email: new FormControl(this.data?.user?.email || '', Validators.required),
-  //   password: new FormControl(this.data?.user ? '****' : '', Validators.required),
-  // });
-
-  // loginForm = new FormGroup({
-  //   email: new FormControl('', Validators.required),
-  //   password: new FormControl('', Validators.required),
-  // });
+  heroForm: any;
 
   @Output()
-  userValues = new EventEmitter<Hero>();
+  heroValues = new EventEmitter<Hero>();
 
   
   constructor(
@@ -45,63 +32,37 @@ export class DialogComponent {
     console.log('this.data', this.data);
     switch (this.data.action) {
       case 'edit':
+      case 'add':
         this.submitText = 'Update';
-        this.userForm = new FormGroup({
-          firstName: new FormControl(this.firstName || '', Validators.required),
-          lastName: new FormControl(this.lastName || '', Validators.required),
-          email: new FormControl(this.data?.user?.email || '', Validators.required),
-          password: new FormControl(this.data?.user ? '****' : '', Validators.required),
+        this.heroForm = new FormGroup({
+          name: new FormControl(this.data?.hero?.name || '', Validators.required),
+          description: new FormControl(this.data?.hero?.description || '', Validators.required),
         });
         break;
       case 'delete':
         this.submitText = 'Confirm'
         break;
-      case 'login':
-        this.submitText = 'Login';
-        this.userForm = new FormGroup({
-          email: new FormControl(this.data?.user?.email || '', Validators.required),
-          password: new FormControl(this.data?.user ? '****' : '', Validators.required),
-        });
-        break;
-      default:
-        this.submitText = 'Create';
-        this.userForm = new FormGroup({
-          firstName: new FormControl(this.firstName || '', Validators.required),
-          lastName: new FormControl(this.lastName || '', Validators.required),
-          email: new FormControl(this.data?.user?.email || '', Validators.required),
-          password: new FormControl(this.data?.user ? '****' : '', Validators.required),
-        });
-        break;
     }
-
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  onCancel() {
+    this.dialogRef.close('Cancel');
+  }
+
   async submit() {
-    console.log('submitForm', this.userForm?.value);
-    let user = this.transformData(this.userForm?.value);
-    if (!['delete', 'login'].includes(this.data.action)) {
-      this.dialogRef.close({user: user, action: this.data.action });
+    console.log('submitForm', this.heroForm?.value);
+    if (!['delete'].includes(this.data.action)) {
+      const hero = this.heroForm?.value;
+      hero.id = this.data?.hero?.id || this.data.idToNewUser;
+      hero.picture = this.data?.hero?.picture || 'http://dummyimage.com/100x100.png/5fa2dd/ffffff';
+      this.dialogRef.close({hero: hero, action: this.data.action });
     } else {
-      this.dialogRef.close({ user: user });
+      this.dialogRef.close('confirm');
     }
   }
 
-  transformData(user: any) {
-    if (user) {
-      user.name = user.firstName + ' ' + user.lastName;
-      if (this.data.user) {
-        user.id = this.data.user.id;
-      }
-      if (this.data.action === 'login') {
-        delete user.name;
-      }
-      delete user.firstName
-      delete user.lastName
-    }
-    return user;
-  }
 }

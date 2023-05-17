@@ -2,10 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
-## Packages and run application
+## To run using docker
+Run docker-compose up --build
+
+## Packages and run application normally (not using docker)
 Run npm i to install all necessary dependencies for the project.
-Type npm start to run the application
-Run docker pull mockserver/mockserver to set up mockserver
+Type ng serve to run the application
 
 ## Code scaffolding
 

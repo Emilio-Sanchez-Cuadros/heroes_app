@@ -9,13 +9,9 @@
           <mat-icon>home</mat-icon>
           <span>Home</span>
         </button>
-        <button *ngIf="!token" (click)="login('login')" mat-menu-item>
-          <mat-icon>login</mat-icon>
-          <span>Login</span>
-        </button>
-        <button *ngIf="token" (click)="logout()" mat-menu-item>
-          <mat-icon>logout</mat-icon>
-          <span>Logout</span>
+        <button routerLink="/heroes" mat-menu-item>
+          <mat-icon>supervised_user_circle</mat-icon>
+          <span>Heroes list</span>
         </button>
       </span>
     </mat-menu>
