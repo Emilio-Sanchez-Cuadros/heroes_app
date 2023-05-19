@@ -48,6 +48,7 @@ export class HeroesComponent implements OnInit {
       console.log('searchInput.subscribe() searchText:', searchText);
       this._heroesService.getHeroByName(searchText)
         .subscribe(searchList => {
+          console.log('searchInput.subscribe() searchText', searchList);
           this.dataSource = this.getHeroesList(searchList);
           this.dataSource.paginator = this.paginator;
       })
@@ -79,9 +80,10 @@ export class HeroesComponent implements OnInit {
             this.dataSource = updatedList;
             this.toasterMessage = 'Hero created successfully';
           } else if (result.action === 'edit') {
-            const indexOfHero = this.dataSource.data.indexOf(hero);
-            const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, indexOfHero));
-            this.dataSource.data[indexOfHero] = updatedHero;
+            // const indexOfHero = this.dataSource.data.indexOf(hero);
+            const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
+            this.dataSource = this._heroesService.getHeroes();
+            // this.dataSource.data[indexOfHero] = updatedHero;
             this.toasterMessage = 'Hero updated successfully';
           }
           this.dataSource.paginator = this.paginator;
@@ -108,8 +110,8 @@ export class HeroesComponent implements OnInit {
         return;
       }
       try {
-        const updatedList = await lastValueFrom(this._heroesService.createHero(result.hero));
-        this.dataSource = this.getHeroesList(updatedList);
+        await lastValueFrom(this._heroesService.createHero(result.hero));
+        this.dataSource = this._heroesService.getHeroes();
         this.dataSource.paginator = this.paginator;
         this.toasterMessage = 'Hero created successfully';
         this.toaster.success(this.toasterMessage);
@@ -121,7 +123,7 @@ export class HeroesComponent implements OnInit {
 
   }
 
-  async deleteHero(hero: Hero, action: string) {
+  async deleteHero(hero: any, action: string) {
     console.log('deleteHero()', hero);
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
@@ -135,9 +137,11 @@ export class HeroesComponent implements OnInit {
         return;
       }
       try {
-        const indexOfHero = this.dataSource.data.indexOf(hero);
-        const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
-        this.dataSource = this.getHeroesList(updatedList);
+        // const indexOfHero = this.dataSource.data.indexOf(hero);
+        // const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
+        const updatedList = await lastValueFrom(this._heroesService.deleteHero(hero.id));
+        // this.dataSource = this.getHeroesList(updatedList);
+        this.dataSource = this._heroesService.getHeroes();
         this.dataSource.paginator = this.paginator;
         this.toasterMessage = 'Hero deleted successfully';
         this.toaster.success(this.toasterMessage);

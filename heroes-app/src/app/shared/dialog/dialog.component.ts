@@ -36,6 +36,7 @@ export class DialogComponent {
         this.submitText = 'Update';
         this.heroForm = new FormGroup({
           name: new FormControl(this.data?.hero?.name || '', Validators.required),
+          picture: new FormControl(this.data?.hero?.picture || '', Validators.required),
           description: new FormControl(this.data?.hero?.description || '', Validators.required),
         });
         break;
@@ -58,7 +59,7 @@ export class DialogComponent {
     if (!['delete'].includes(this.data.action)) {
       const hero = this.heroForm?.value;
       hero.id = this.data?.hero?.id || this.data.idToNewUser;
-      hero.picture = this.data?.hero?.picture || 'http://dummyimage.com/100x100.png/5fa2dd/ffffff';
+      // hero.picture = this.data?.hero?.picture || 'http://dummyimage.com/100x100.png/5fa2dd/ffffff';
       this.dialogRef.close({hero: hero, action: this.data.action });
     } else {
       this.dialogRef.close('confirm');
