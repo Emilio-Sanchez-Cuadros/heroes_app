@@ -80,10 +80,14 @@ export class HeroesComponent implements OnInit {
             this.dataSource = updatedList;
             this.toasterMessage = 'Hero created successfully';
           } else if (result.action === 'edit') {
-            // const indexOfHero = this.dataSource.data.indexOf(hero);
             const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
-            this.dataSource = this._heroesService.getHeroes();
+            /* Methods with mocked data from json */
+            // const indexOfHero = this.dataSource.data.indexOf(hero);
             // this.dataSource.data[indexOfHero] = updatedHero;
+            
+            /* Code for using BE */
+            this.dataSource = this._heroesService.getHeroes();
+
             this.toasterMessage = 'Hero updated successfully';
           }
           this.dataSource.paginator = this.paginator;

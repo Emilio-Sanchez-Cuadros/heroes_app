@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "c3bd6e6b-26ac-4f94-8953-305073f9d721",
+		"name": "HEROES ENDPOINTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20607626"
+	},
+	"item": [
+		{
+			"name": "Heroes",
+			"item": [
+				{
+					"name": "Post Hero",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Array of heroes to be inserted",
+									"const heroes = [",
+									"  {",
+									"    name: 'Superman',",
+									"    description: 'The Man of Steel',",
+									"    picture: 'https://example.com/superman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Batman',",
+									"    description: 'The Dark Knight',",
+									"    picture: 'https://example.com/batman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Wonder Woman',",
+									"    description: 'Amazon Princess and warrior',",
+									"    picture: 'https://example.com/wonderwoman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Spider-Man',",
+									"    description: 'Friendly neighborhood hero with spider-like abilities',",
+									"    picture: 'https://example.com/spiderman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Captain America',",
+									"    description: 'Super soldier and leader of the Avengers',",
+									"    picture: 'https://example.com/captainamerica.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Iron Man',",
+									"    description: 'Genius billionaire playboy philanthropist with a high-tech suit',",
+									"    picture: 'https://example.com/ironman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Black Widow',",
+									"    description: 'Highly skilled spy and Avenger',",
+									"    picture: 'https://example.com/blackwidow.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Thor',",
+									"    description: 'God of Thunder and member of the Avengers',",
+									"    picture: 'https://example.com/thor.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Hulk',",
+									"    description: 'Gamma-powered scientist with immense strength',",
+									"    picture: 'https://example.com/hulk.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Black Panther',",
+									"    description: 'King of Wakanda and protector of the Black Panther mantle',",
+									"    picture: 'https://example.com/blackpanther.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Doctor Strange',",
+									"    description: 'Master of the Mystic Arts and protector of reality',",
+									"    picture: 'https://example.com/doctorstrange.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Captain Marvel',",
+									"    description: 'Cosmic-powered hero with superhuman abilities',",
+									"    picture: 'https://example.com/captainmarvel.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Green Lantern',",
+									"    description: 'Space cop with a power ring and member of the Green Lantern Corps',",
+									"    picture: 'https://example.com/greenlantern.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Flash',",
+									"    description: 'Speedster with superhuman speed and member of the Justice League',",
+									"    picture: 'https://example.com/flash.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Aquaman',",
+									"    description: 'King of Atlantis and protector of the oceans',",
+									"    picture: 'https://example.com/aquaman.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Cyborg',",
+									"    description: 'Half-human, half-machine hero with cybernetic enhancements',",
+									"    picture: 'https://example.com/cyborg.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Star-Lord',",
+									"    description: 'Leader of the Guardians of the Galaxy with a love for music',",
+									"    picture: 'https://example.com/starlord.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Gamora',",
+									"    description: 'Skilled assassin and member of the Guardians of the Galaxy',",
+									"    picture: 'https://example.com/gamora.jpg'",
+									"  },",
+									"  {",
+									"    name: 'Groot',",
+									"    description: 'Flora colossus with a limited vocabulary',",
+									"    picture: 'https://example.com/groot.jpg'",
+									"  }",
+									"];",
+									"",
+									"function createHero(hero) {",
+									"  return new Promise((resolve, reject) => {",
+									"    pm.setNextRequest({",
+									"      url: 'http://localhost:3000/api/heroes', // Replace with your API URL",
+									"      method: 'POST',",
+									"      headers: {",
+									"        'Content-Type': 'application/json'",
+									"      },",
+									"      body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(hero)",
+									"      }",
+									"    }, (error, response) => {",
+									"      if (error) {",
+									"        reject(error);",
+									"      } else {",
+									"        resolve(response);",
+									"      }",
+									"    });",
+									"  });",
+									"}",
+									"",
+									"async function insertHeroes() {",
+									"  try {",
+									"    for (let hero of heroes) {",
+									"      const response = await createHero(hero);",
+									"      console.log(response.json());",
+									"    }",
+									"    console.log('All heroes inserted successfully!');",
+									"  } catch (error) {",
+									"    console.error('Error inserting heroes:', error);",
+									"  }",
+									"}",
+									"",
+									"insertHeroes();"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{name}}\",\n    \"description\": \"{{description}}\",\n    \"picture\": \"{{picture}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Hero",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Emilio\",\n    \"description\": \"This is an update of a hero\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Hero",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hero",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hero by name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes/search/t",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes",
+								"search",
+								"t"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Heroes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/heroes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"heroes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Server check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/servercheck",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"servercheck"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
