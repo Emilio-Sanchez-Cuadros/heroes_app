@@ -11,13 +11,9 @@ export async function createHero(params: CreateHeroData) {
 }
 
 export async function findHeroByName(name: string) {
-    const ids: number[] = await prisma.$queryRaw`
-    SELECT id FROM "Hero"
-    WHERE "name" LIKE '${name}'
-    ;`;
 
     return prisma.hero.findMany({
-        where: { id: { in: ids.map((row: any) => row.id) } },
+        where: { name: { contains: name, mode: 'insensitive' } },
     })
 }
 

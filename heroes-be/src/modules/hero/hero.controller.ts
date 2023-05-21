@@ -1,8 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createHero, updateHero, deleteHero, findHeroes, findHeroById, findHeroByName } from "./hero.service";
 import { CreateHeroData, UpdateHeroData } from './hero.schema';
-import { verifyPassword } from "../../utils/hash";
-import { fastify } from "../../app";
 
 export async function registerHeroHandler(req: FastifyRequest<{ Body: CreateHeroData}>, reply: FastifyReply) {
     const body = req.body;
