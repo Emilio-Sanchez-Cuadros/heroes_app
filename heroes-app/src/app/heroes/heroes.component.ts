@@ -96,8 +96,7 @@ export class HeroesComponent implements OnInit {
     console.log('newHero this.dataSource', this.dataSource);
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
-        action,
-        idToNewUser: Date.now()
+        action
       },
     });
 

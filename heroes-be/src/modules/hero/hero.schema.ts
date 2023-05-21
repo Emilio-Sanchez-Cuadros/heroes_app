@@ -21,6 +21,9 @@ const updateHeroSchema = z.object({
     name: z.string({
         invalid_type_error: 'Name has to be a string'
     }),
+    picture: z.string({
+        invalid_type_error: 'Picture has to be a string'
+    }),
     description: z.string({
         invalid_type_error: 'Description has to be a string'
     })
