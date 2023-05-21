@@ -77,7 +77,6 @@ export class HeroesComponent implements OnInit {
       if (result?.hero) {
         try {
           console.log('The dialog was closed: ', result);
-          let updatedList;
           const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
           const indexOfHero = this.dataSource.data.indexOf(hero);
           this.dataSource.data[indexOfHero] = updatedHero;          
@@ -85,8 +84,12 @@ export class HeroesComponent implements OnInit {
           this.toasterMessage = 'Hero updated successfully';
           this.toaster.success(this.toasterMessage);
         } catch (error: any) {
-          console.log(error);
-          this.toaster.error('Something went wrong, please review the data and try again');
+          console.log(error.error.code);
+          this.toasterMessage = 'Something went wrong, please review the data and try again';
+          if (error.error.code === 'P2002') {
+            this.toasterMessage = 'This hero already exists';
+          }
+          this.toaster.error(this.toasterMessage);
         }
       }
     });
@@ -112,10 +115,14 @@ export class HeroesComponent implements OnInit {
         });
         this.toasterMessage = 'Hero created successfully';
         this.toaster.success(this.toasterMessage);
-      } catch (error) {
-        console.log(error);
-        this.toaster.error('Something went wrong, please try again');
-      }
+      } catch (error: any) {
+        console.log(error.error.code);
+        this.toasterMessage = 'Something went wrong, please review the data and try again';
+        if (error.error.code === 'P2002') {
+          this.toasterMessage = 'This hero already exists';
+        }
+        this.toaster.error(this.toasterMessage);
+    }
     });
 
   }

@@ -58,7 +58,9 @@ export class DialogComponent {
     console.log('submitForm', this.heroForm?.value);
     if (!['delete'].includes(this.data.action)) {
       const hero = this.heroForm?.value;
-      // hero.id = this.data?.hero?.id || this.data.idToNewUser;
+      if (['edit'].includes(this.data.action)) {
+        hero.id = this.data?.hero?.id;
+      }
       // hero.picture = this.data?.hero?.picture;
       this.dialogRef.close({hero: hero, action: this.data.action });
     } else {
