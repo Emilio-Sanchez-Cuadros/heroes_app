@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
+import { delay, lastValueFrom } from 'rxjs';
 import { Hero } from '../models/models'
 import { DialogComponent } from '../shared/dialog/dialog.component';
 import { ToastrService } from 'ngx-toastr';
@@ -18,13 +18,13 @@ import { FormControl } from '@angular/forms';
 })
 export class HeroesComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;    
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;   
 
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
-  dataSource: any;
+  dataSource: any = new MatTableDataSource<any>([]);
   toasterMessage: string = '';
   searchInput = new FormControl('');
-  loaded: boolean = true;
+  loaded: boolean = false;
 
   constructor(
     public matDialog: MatDialog,
@@ -34,10 +34,13 @@ export class HeroesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    lastValueFrom(this._heroesService.getHeroes())
-      .then(heroes => {
-        this.dataSource = this.getHeroesList(heroes);
-        this.dataSource.paginator = this.paginator;   
+    this._heroesService.getHeroes()
+    .pipe(delay(2000))
+      .subscribe(heroes => {
+        this.loaded = true;
+        this.dataSource.data = heroes;
+        console.log('this.dataSource', this.dataSource);
+        this.dataSource.paginator = this.paginator;
     });
 
     this.searchInput.valueChanges
@@ -49,7 +52,7 @@ export class HeroesComponent implements OnInit {
       this._heroesService.getHeroByName(searchText)
         .subscribe(searchList => {
           console.log('searchInput.subscribe() searchText', searchList);
-          this.dataSource = this.getHeroesList(searchList);
+          this.dataSource.data = searchList;
           this.dataSource.paginator = this.paginator;
       })
     });
@@ -59,10 +62,6 @@ export class HeroesComponent implements OnInit {
   viewHero(hero: Hero, action: string) {
     if (action === 'view') {
       const indexOfHero = this.dataSource.data.indexOf(hero)
-      /* Code for using mocked data from json */
-      // this.router.navigate(['/heroes/', indexOfHero]);
-
-      /* Code for using BE */
       this.router.navigate(['/heroes/', hero.id]);
       return;
     }
@@ -79,22 +78,11 @@ export class HeroesComponent implements OnInit {
         try {
           console.log('The dialog was closed: ', result);
           let updatedList;
-          if (result.action === 'add') {
-            updatedList = await lastValueFrom(this._heroesService.createHero(result.hero));
-            this.dataSource = updatedList;
-            this.toasterMessage = 'Hero created successfully';
-          } else if (result.action === 'edit') {
-            const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
-            /* Code for using mocked data from json */
-            // const indexOfHero = this.dataSource.data.indexOf(hero);
-            // this.dataSource.data[indexOfHero] = updatedHero;
-            
-            /* Code for using BE */
-            this.dataSource = this._heroesService.getHeroes();
-
-            this.toasterMessage = 'Hero updated successfully';
-          }
+          const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
+          const indexOfHero = this.dataSource.data.indexOf(hero);
+          this.dataSource.data[indexOfHero] = updatedHero;          
           this.dataSource.paginator = this.paginator;
+          this.toasterMessage = 'Hero updated successfully';
           this.toaster.success(this.toasterMessage);
         } catch (error: any) {
           console.log(error);
@@ -119,8 +107,10 @@ export class HeroesComponent implements OnInit {
       }
       try {
         await lastValueFrom(this._heroesService.createHero(result.hero));
-        this.dataSource = this._heroesService.getHeroes();
-        this.dataSource.paginator = this.paginator;
+        this._heroesService.getHeroes().subscribe(heroes => {
+          this.dataSource.data = heroes;
+          this.dataSource.paginator = this.paginator;
+        });
         this.toasterMessage = 'Hero created successfully';
         this.toaster.success(this.toasterMessage);
       } catch (error) {
@@ -145,16 +135,13 @@ export class HeroesComponent implements OnInit {
         return;
       }
       try {
-        /* Code for using mocked data from json */
-        // const indexOfHero = this.dataSource.data.indexOf(hero);
-        // const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
-        const updatedList = await lastValueFrom(this._heroesService.deleteHero(hero.id));
-        // this.dataSource = this.getHeroesList(updatedList);
-        
-        /* Code for using BE */
-        this.dataSource = this._heroesService.getHeroes();
-        
-        this.dataSource.paginator = this.paginator;
+        await this._heroesService.deleteHero(hero.id).subscribe(res => {
+          console.log('hero deleted', res);
+          this._heroesService.getHeroes().subscribe(heroes => {
+            this.dataSource.data = heroes;
+            this.dataSource.paginator = this.paginator;
+          });
+        });
         this.toasterMessage = 'Hero deleted successfully';
         this.toaster.success(this.toasterMessage);
       } catch (error) {
@@ -164,7 +151,7 @@ export class HeroesComponent implements OnInit {
     });
   }
 
-  getHeroesList(heroes: Hero[]) {
+  getHeroesList(heroes: any) {
     return new MatTableDataSource(heroes);
   }
 

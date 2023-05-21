@@ -93,5 +93,6 @@ export class HeroesService {
       console.log('deleteHero() heroes service', heroId);
       return this.http.delete(
         this.apiUrl + "heroes/" + heroId
-    )}
+    );
+  }
 }

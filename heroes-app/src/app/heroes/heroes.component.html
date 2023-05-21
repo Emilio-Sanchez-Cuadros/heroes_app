@@ -17,7 +17,7 @@
 
     <div *ngIf="!loaded">
         <div>
-            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" />
+            <img src="../../assets/images/giphy.gif" />
         </div>
 
     </div>
@@ -71,7 +71,7 @@
             <tr mat-row routerLinkActive="router-link-active" *matRowDef="let hero; columns: displayedColumns;">
             </tr>
         </table>
-        <mat-paginator [showFirstLastButtons]="true" [length]="20" [pageSize]="5" [pageSizeOptions]="[5, 10, 30, 50]"
-            [pageIndex]="0"></mat-paginator>
     </div>
+    <mat-paginator [hidden]="!loaded" [showFirstLastButtons]="true" [length]="dataSource.length" [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 30, 50]" [pageIndex]="0"></mat-paginator>
 </div>
