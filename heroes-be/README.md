@@ -8,7 +8,7 @@ This is a code repository for heroes-app Backend project.
 
 Docker Compose is included as part of Docker' desktop install
 
-### To run:
+### To run postgres docker:
 
 docker-compose up
 
