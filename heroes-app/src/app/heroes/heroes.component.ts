@@ -59,7 +59,11 @@ export class HeroesComponent implements OnInit {
   viewHero(hero: Hero, action: string) {
     if (action === 'view') {
       const indexOfHero = this.dataSource.data.indexOf(hero)
-      this.router.navigate(['/heroes/', indexOfHero]);
+      /* Code for using mocked data from json */
+      // this.router.navigate(['/heroes/', indexOfHero]);
+
+      /* Code for using BE */
+      this.router.navigate(['/heroes/', hero.id]);
       return;
     }
     console.log('viewHero()', hero);
@@ -81,7 +85,7 @@ export class HeroesComponent implements OnInit {
             this.toasterMessage = 'Hero created successfully';
           } else if (result.action === 'edit') {
             const updatedHero = await lastValueFrom(this._heroesService.updateHero(result.hero, result.hero.id));
-            /* Methods with mocked data from json */
+            /* Code for using mocked data from json */
             // const indexOfHero = this.dataSource.data.indexOf(hero);
             // this.dataSource.data[indexOfHero] = updatedHero;
             
@@ -141,11 +145,15 @@ export class HeroesComponent implements OnInit {
         return;
       }
       try {
+        /* Code for using mocked data from json */
         // const indexOfHero = this.dataSource.data.indexOf(hero);
         // const updatedList = await lastValueFrom(this._heroesService.deleteHero(indexOfHero));
         const updatedList = await lastValueFrom(this._heroesService.deleteHero(hero.id));
         // this.dataSource = this.getHeroesList(updatedList);
+        
+        /* Code for using BE */
         this.dataSource = this._heroesService.getHeroes();
+        
         this.dataSource.paginator = this.paginator;
         this.toasterMessage = 'Hero deleted successfully';
         this.toaster.success(this.toasterMessage);
