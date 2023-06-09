@@ -55,7 +55,7 @@ export class HeroesService {
   // }
 
   getHeroes(): Observable<any> {
-    console.log('getHeroProfile()');
+    console.log('getHeroes()');
     return this.http.get(this.apiUrl + "heroes");
   }
 

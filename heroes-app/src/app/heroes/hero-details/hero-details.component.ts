@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Hero } from '../models/models';
+import { Hero } from '../../models/models';
 import { ActivatedRoute } from '@angular/router';
-import { HeroesService } from '../services/heroes.service';
+import { HeroesService } from '../../services/heroes.service';
 
 @Component({
   selector: 'app-hero-details',

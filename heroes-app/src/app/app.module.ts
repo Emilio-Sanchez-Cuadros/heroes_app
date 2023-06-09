@@ -22,7 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrModule } from 'ngx-toastr';
-import { HeroDetailsComponent } from './hero-details/hero-details.component';
+import { HeroDetailsComponent } from './heroes/hero-details/hero-details.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {  } from '@angular/material/';
 import { UppercaseDirective } from './directives/uppercase.directive'

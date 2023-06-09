@@ -6,8 +6,6 @@ COPY . .
 
 RUN npm i && npm run build
 
-RUN 
-
 FROM nginx:alpine
 
 WORKDIR /usr/share/nginx/html
