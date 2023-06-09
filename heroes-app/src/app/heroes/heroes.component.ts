@@ -96,7 +96,7 @@ export class HeroesComponent implements OnInit {
   }
 
   async newHero(action: string) {
-    console.log('newHero this.dataSource', this.dataSource);
+    console.log('newHero()', action);
     const dialogRef = this.matDialog.open(DialogComponent, {
       data: {
         action
